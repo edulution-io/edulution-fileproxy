@@ -1,0 +1,18 @@
+ldap:
+  server: "ldaps://10.0.0.1:636"
+  insecure_skip_verify: true
+  domain: "LINUXMUSTER"
+
+smb:
+  server: "10.0.0.1:445"
+  share_name: "default-school"
+
+http:
+  address: ":8443"
+  webdav_prefix: "/webdav/"
+  cert_file: "webdav.pem"
+  key_file: "webdav.key"
+
+log:
+  level: "debug"        # options: trace, debug, info, warn, error, fatal, panic
+  file: "./webdav-server.log"
