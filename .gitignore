@@ -1,1 +1,5 @@
 webdav-server.log
+
+# Ignore key and certificate files
+*.key
+*.pem
