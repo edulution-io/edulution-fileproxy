@@ -17,14 +17,14 @@ type smbFile struct {
 }
 
 func (f *smbFile) Close() error {
-	logrus.Debug("Closing file and unmounting share")
+	logrus.Debug("[SMB] Closing file and unmounting share")
 	err := f.File.Close()
 	f.share.Umount()
 	return err
 }
 
 func (fs FS) Mkdir(ctx context.Context, name string, perm os.FileMode) error {
-	logrus.Debugf("Mkdir called: %s", name)
+	logrus.Debugf("[SMB] Mkdir: %s", name)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -32,11 +32,18 @@ func (fs FS) Mkdir(ctx context.Context, name string, perm os.FileMode) error {
 		return err
 	}
 	defer share.Umount()
-	return share.Mkdir(name, perm)
+
+	res_err := share.Mkdir(name, perm)
+	if res_err != nil {
+		logrus.Errorf("SMB mkdir error: %v", res_err)
+	}
+
+	logrus.Debugf("[SMB] mkdir %s successful!", name)
+	return res_err
 }
 
 func (fs FS) OpenFile(ctx context.Context, name string, flag int, perm os.FileMode) (webdav.File, error) {
-	logrus.Debugf("OpenFile called: %s", name)
+	logrus.Debugf("[SMB] OpenFile: %s", name)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -53,7 +60,7 @@ func (fs FS) OpenFile(ctx context.Context, name string, flag int, perm os.FileMo
 }
 
 func (fs FS) RemoveAll(ctx context.Context, name string) error {
-	logrus.Debugf("RemoveAll called: %s", name)
+	logrus.Debugf("[SMB] RemoveAll: %s", name)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -61,11 +68,18 @@ func (fs FS) RemoveAll(ctx context.Context, name string) error {
 		return err
 	}
 	defer share.Umount()
-	return share.Remove(name)
+
+	res_err := share.Remove(name)
+	if res_err != nil {
+		logrus.Errorf("SMB remove error: %v", res_err)
+	}
+
+	logrus.Debugf("[SMB] remove %s successful!", name)
+	return res_err
 }
 
 func (fs FS) Rename(ctx context.Context, oldName, newName string) error {
-	logrus.Debugf("Rename called: %s -> %s", oldName, newName)
+	logrus.Debugf("[SMB] Rename: %s -> %s", oldName, newName)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -73,11 +87,18 @@ func (fs FS) Rename(ctx context.Context, oldName, newName string) error {
 		return err
 	}
 	defer share.Umount()
-	return share.Rename(oldName, newName)
+
+	res_err := share.Rename(oldName, newName)
+	if res_err != nil {
+		logrus.Errorf("SMB rename error: %v", res_err)
+	}
+
+	logrus.Debugf("[SMB] rename %s to %s successful!", oldName, newName)
+	return res_err
 }
 
 func (fs FS) Stat(ctx context.Context, name string) (os.FileInfo, error) {
-	logrus.Debugf("Stat called: %s", name)
+	logrus.Debugf("[SMB] Stat: %s", name)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -85,11 +106,18 @@ func (fs FS) Stat(ctx context.Context, name string) (os.FileInfo, error) {
 		return nil, err
 	}
 	defer share.Umount()
-	return share.Stat(name)
+
+	stat, res_err := share.Stat(name)
+	if res_err != nil {
+		logrus.Errorf("SMB stat error: %v", res_err)
+	}
+
+	logrus.Debugf("[SMB] stat %s successful!", name)
+	return stat, res_err
 }
 
 func (fs FS) ReadDir(ctx context.Context, name string) ([]os.FileInfo, error) {
-	logrus.Infof("ReadDir called: %s", name)
+	logrus.Infof("[SMB] ReadDir: %s", name)
 	sess := ctx.Value("smbSess").(*smb2.Session)
 	share, err := sess.Mount(fs.Share)
 	if err != nil {
@@ -97,5 +125,11 @@ func (fs FS) ReadDir(ctx context.Context, name string) ([]os.FileInfo, error) {
 		return nil, err
 	}
 	defer share.Umount()
-	return share.ReadDir(name)
+	readdir, res_err := share.ReadDir(name)
+	if res_err != nil {
+		logrus.Errorf("SMB readdir error: %v", res_err)
+	}
+
+	logrus.Debugf("[SMB] readdir %s successful!", name)
+	return readdir, res_err
 }

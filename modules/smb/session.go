@@ -40,7 +40,7 @@ func SessionMiddleware(cfg *config.Config, next http.Handler) http.Handler {
 			return
 		}
 		defer sess.Logoff()
-		logrus.Infof("User %s established SMB session from %s", creds.User, clientIP)
+		logrus.Infof("[%s] User %s established SMB session", clientIP, creds.User)
 
 		ctx := context.WithValue(r.Context(), "smbSess", sess)
 		next.ServeHTTP(w, r.WithContext(ctx))

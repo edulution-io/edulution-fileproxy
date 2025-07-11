@@ -20,13 +20,16 @@ func main() {
 		logrus.Fatal(err)
 	}
 	logging.Setup(cfg.Log.Level, cfg.Log.File)
-	handler := webdav.NewHandler(cfg)
+
+	shares, _ := smb.ListShares(cfg)
+
+	handler := webdav.NewHandler(cfg, shares)
 	mux := http.NewServeMux()
 	mux.Handle(cfg.HTTP.WebDAVPrefix,
 		auth.LDAPMiddleware(cfg,
 			smb.SessionMiddleware(cfg, handler),
 		),
 	)
-	logrus.Infof("Starting server at %s", cfg.HTTP.Address)
+	logrus.Infof("Starting edulution-fileproxy at 0.0.0.0%s!", cfg.HTTP.Address)
 	logrus.Fatal(http.ListenAndServeTLS(cfg.HTTP.Address, cfg.HTTP.CertFile, cfg.HTTP.KeyFile, mux))
 }

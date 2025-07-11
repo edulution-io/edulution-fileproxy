@@ -1,4 +1,5 @@
 webdav-server.log
+config.yml
 
 # Ignore key and certificate files
 *.key

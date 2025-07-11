@@ -14,11 +14,12 @@ type Config struct {
 	LDAP struct {
 		Server             string `yaml:"server"`
 		InsecureSkipVerify bool   `yaml:"insecure_skip_verify"`
-		Domain             string `yaml:"domain"`
 	} `yaml:"ldap"`
 	SMB struct {
-		Server    string `yaml:"server"`
-		ShareName string `yaml:"share_name"`
+		Server   string `yaml:"server"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+		Domain   string `yaml:"domain"`
 	} `yaml:"smb"`
 	HTTP struct {
 		Address      string `yaml:"address"`
