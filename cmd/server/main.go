@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/edulution-io/edulution-fileproxy/modules/auth"
 	"github.com/edulution-io/edulution-fileproxy/modules/config"
@@ -12,9 +14,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var (
+	version   = "dev"
+	buildDate = "unknown"
+)
+
 func main() {
-	configPath := flag.String("config", "config.yml", "config file path")
+	showVersion := flag.Bool("v", false, "Show version")
+	configPath := flag.String("c", "/etc/edulution-fileproxy/config.yml", "Path of the configuration-file")
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Printf("Version: %s (%s)", version, buildDate)
+		os.Exit(0)
+	}
+
 	cfg, err := config.Load(*configPath)
 	if err != nil {
 		logrus.Fatal(err)
