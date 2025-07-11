@@ -2,6 +2,7 @@ package smb
 
 import (
 	"net"
+	"strings"
 
 	"github.com/edulution-io/edulution-fileproxy/modules/config"
 	"github.com/hirochachacha/go-smb2"
@@ -41,8 +42,16 @@ func ListShares(cfg *config.Config) ([]Share, error) {
 		return nil, err
 	}
 
-	shares := make([]Share, len(share_names))
-	for i, n := range share_names {
+	var filtered_share_names []string
+
+	for _, item := range share_names {
+		if !strings.HasSuffix(item, "$") {
+			filtered_share_names = append(filtered_share_names, item)
+		}
+	}
+
+	shares := make([]Share, len(filtered_share_names))
+	for i, n := range filtered_share_names {
 		shares[i] = Share{ShareName: n}
 	}
 	return shares, nil
