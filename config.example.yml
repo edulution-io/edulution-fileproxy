@@ -15,5 +15,5 @@ http:
   key_file: "webdav.key"
 
 log:
-  level: "error"        # options: trace, debug, info, warn, error, fatal, panic
+  level: "info"        # options: trace, debug, info, warn, error, fatal, panic
   file: "./webdav-server.log"

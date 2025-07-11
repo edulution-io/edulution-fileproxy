@@ -1,7 +1,20 @@
 # edulution-fileproxy
 
-Möglichkeit 1:
-    - Nur ein Share z.B. default-school anzeigen und dort die Dateien zur verfügung stellen: URL: /webdav/
+## Installation
 
-Möglichkeit 2:
-    - Mehrere Shares konfigurierbar machen. Bei Anfragen an /webdav/ werden alle Shares aufgelistet. Zugriff auf z.B. default-school über /webdav/default-school
+1. Create directory on the server eg. `/srv/edulution-fileproxy`
+2. Download the edulution-fileproxy from http://github.com/edulution-io/edulution-fileproxy/releases/latest/download/edulution-fileproxy.tar.gz
+3. Untar the file with `tar xvfz edulution-fileproxy.tar.gz`
+4. Modify the `config.yml` for your needs
+5. Start the edulution-fileproxy with `./edulution-fileproxy`
+
+### Install-Helper
+
+```bash
+mkdir -p /srv/edulution-fileproxy
+cd /srv/edulution-fileproxy
+
+wget http://github.com/edulution-io/edulution-fileproxy/releases/latest/download/edulution-fileproxy.tar.gz
+
+tar xvfz edulution-fileproxy.tar.gz
+```
