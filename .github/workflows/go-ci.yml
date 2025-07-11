@@ -36,7 +36,7 @@ jobs:
 
       - name: Build server binary
         run: |
-          go build -ldflags "-X main.version=${{ github.ref }} -X main.buildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -v -o edulution-fileproxy ./cmd/server
+          go build -ldflags "-X main.version=${{ github.ref_name }} -X main.buildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -v -o edulution-fileproxy ./cmd/server
           chmod +x edulution-fileproxy
           tar czf edulution-fileproxy.tar.gz edulution-fileproxy config.example.yml
 
